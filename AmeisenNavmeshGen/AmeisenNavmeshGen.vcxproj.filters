@@ -13,5 +13,87 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Headerdateien\filechunks">
+      <UniqueIdentifier>{77f71247-deb7-4b2c-9e04-e5a4a5141093}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="chunk.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vectors.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MVER.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MHDR.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MCIN.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MTEX.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MDID.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MHID.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MMDX.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MMID.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MWMO.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MWID.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MDDF.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MODF.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MH2O.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MFBO.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MTXF.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNK.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="MCVT.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNR.h">
+      <Filter>Headerdateien\filechunks</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -115,6 +115,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="block.h" />
+    <ClInclude Include="chunk.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="MCIN.h" />
+    <ClInclude Include="MCNK.h" />
+    <ClInclude Include="MCNR.h" />
+    <ClInclude Include="MCVT.h" />
+    <ClInclude Include="MDDF.h" />
+    <ClInclude Include="MDID.h" />
+    <ClInclude Include="MFBO.h" />
+    <ClInclude Include="MH2O.h" />
+    <ClInclude Include="MHDR.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="MHID.h" />
+    <ClInclude Include="MMDX.h" />
+    <ClInclude Include="MMID.h" />
+    <ClInclude Include="MODF.h" />
+    <ClInclude Include="MTEX.h" />
+    <ClInclude Include="MTXF.h" />
+    <ClInclude Include="MVER.h" />
+    <ClInclude Include="MWID.h" />
+    <ClInclude Include="MWMO.h" />
+    <ClInclude Include="vectors.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

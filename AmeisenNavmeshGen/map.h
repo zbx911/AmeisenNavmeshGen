@@ -5,7 +5,7 @@
 
 #include "block.h"
 
-constexpr double MAP_SIZE = 34133.33312;
+constexpr float MAP_SIZE = 34133.33312F;
 
 struct Map
 {

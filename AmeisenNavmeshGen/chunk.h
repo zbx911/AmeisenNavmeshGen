@@ -8,17 +8,16 @@
 
 #include "vectors.h"
 
-constexpr auto CHUNK_SIZE = 33.3333;
+constexpr float CHUNK_SIZE = 33.3333F;
+constexpr float TILE_STEP9 = CHUNK_SIZE / 9.F;
+constexpr float TILE_STEP8 = CHUNK_SIZE / 8.F;
 
 struct Chunk
 {
-	float heights[9 * 9 + 8 * 8];
-	float normals[9 * 9 + 8 * 8];
-
 	Vector3 position;
 
-	std::vector<Vector3> vertices;
-	std::vector<uint32_t> vertices;
+	float heights[9 * 9 + 8 * 8];
+	float normals[9 * 9 + 8 * 8];
 };
 
 #endif

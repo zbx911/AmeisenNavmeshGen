@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "map.h"
 #include "block.h"

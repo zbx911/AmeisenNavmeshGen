@@ -5,7 +5,7 @@
 
 #include "chunk.h"
 
-constexpr double BLOCK_SIZE = 533.33333;
+constexpr float BLOCK_SIZE = 533.33333F;
 
 struct Block
 {

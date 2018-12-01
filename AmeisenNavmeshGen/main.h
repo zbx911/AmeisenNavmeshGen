@@ -17,5 +17,5 @@ void read_MCIN_chunks(std::vector<MCIN_chunk> &adt_mcin_chunks, std::ifstream &a
 void read_MCNK(std::vector<MCNK> &adt_mcnks, std::vector<MCIN_chunk> &adt_mcin_chunks, std::ifstream &adt_stream);
 void read_MCVT(std::vector<MCVT> &adt_mcvt, std::vector<MCNK> &adt_mcnks, std::vector<MCIN_chunk> &adt_mcin_chunks, std::ifstream &adt_stream);
 void read_MCNR(std::vector<MCNR> &adt_mcvt, std::vector<MCNK> &adt_mcnks, std::vector<MCIN_chunk> &adt_mcin_chunks, std::ifstream &adt_stream);
-
+void output_parsing_debug_stuff(MVER adt_mver, MHDR adt_mhdr, MCIN adt_mcin, std::vector<MCIN_chunk> adt_mcin_chunks, std::vector<MCNK> adt_mcnks, std::vector<MCVT> adt_mcvts, std::vector<MCNR> adt_mcnrs);
 #endif

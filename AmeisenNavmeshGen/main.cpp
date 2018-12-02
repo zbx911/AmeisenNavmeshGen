@@ -8,7 +8,9 @@ int main(int argc, char* argv[]) {
 
 	// will be replaced with MPQ reader
 	std::string sample_adts[] = {
-		//"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_47.adt",
+		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_31_48.adt",
+		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_31_47.adt",
+		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_47.adt",
 		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_48.adt"
 	};
 
@@ -94,6 +96,12 @@ int main(int argc, char* argv[]) {
 		std::stringstream index_buffer;
 		int chunk_count = 0;
 		int vertex_count = 1;
+
+		int block_x = atoi(filename_values[1].c_str());
+		int block_y = atoi(filename_values[2].c_str());
+
+		const float BLOCK_BASE_X = block_x * BLOCK_SIZE;
+		const float BLOCK_BASE_Y = block_y * BLOCK_SIZE;
 		// OBJ output
 		for (size_t i = 0; i < 16; i++)
 		{
@@ -106,8 +114,8 @@ int main(int argc, char* argv[]) {
 					{
 						for (size_t x = 0; x < 8; x++)
 						{
-							float posX = (x * TILE_STEP8) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
-							float posY = (y / 2 * TILE_STEP8) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+							float posX = (BLOCK_BASE_X / 2) + (x * TILE_STEP8) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+							float posY = (BLOCK_BASE_Y / 2) + (y / 2 * TILE_STEP8) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
 							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
 
 							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
@@ -126,8 +134,8 @@ int main(int argc, char* argv[]) {
 					{
 						for (size_t x = 0; x < 9; x++)
 						{
-							float posX = (x * TILE_STEP9) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
-							float posY = (y / 2 * TILE_STEP9) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+							float posX = (BLOCK_BASE_X / 2) + (x * TILE_STEP9) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+							float posY = (BLOCK_BASE_Y / 2) + (y / 2 * TILE_STEP9) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
 							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
 
 							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";

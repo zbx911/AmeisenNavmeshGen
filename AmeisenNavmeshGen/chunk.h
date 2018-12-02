@@ -11,6 +11,7 @@
 constexpr float CHUNK_SIZE = 33.3333F;
 constexpr float TILE_STEP9 = CHUNK_SIZE / 9.F;
 constexpr float TILE_STEP8 = CHUNK_SIZE / 8.F;
+constexpr float TILE_UNIT = CHUNK_SIZE / 8.F;
 
 struct Chunk
 {

@@ -106,15 +106,18 @@ int main(int argc, char* argv[]) {
 					{
 						for (size_t x = 0; x < 8; x++)
 						{
-							float posX = (x * TILE_STEP8) + (j * CHUNK_SIZE);
-							float posY = (y / 2 * TILE_STEP8) + (i * CHUNK_SIZE);
-							float posZ = adt_mcvts[chunk_count].heights[vertex_index];
+							float posX = (x * TILE_STEP8) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+							float posY = (y / 2 * TILE_STEP8) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
 
 							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+
 							index_buffer << "f " << vertex_count << " " << vertex_count - 9 << " " << vertex_count - 8 << "\n";
 							index_buffer << "f " << vertex_count << " " << vertex_count + 9 << " " << vertex_count + 8 << "\n";
 							index_buffer << "f " << vertex_count << " " << vertex_count + 8 << " " << vertex_count - 9 << "\n";
 							index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
+							index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
+
 							vertex_count++;
 							vertex_index++;
 						}
@@ -123,11 +126,12 @@ int main(int argc, char* argv[]) {
 					{
 						for (size_t x = 0; x < 9; x++)
 						{
-							float posX = (x * TILE_STEP9) + (j * CHUNK_SIZE);
-							float posY = (y / 2 * TILE_STEP9) + (i * CHUNK_SIZE);
-							float posZ = adt_mcvts[chunk_count].heights[vertex_index];
+							float posX = (x * TILE_STEP9) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+							float posY = (y / 2 * TILE_STEP9) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
 
 							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+
 							vertex_count++;
 							vertex_index++;
 						}
@@ -142,7 +146,7 @@ int main(int argc, char* argv[]) {
 		obj_stream.close();
 	}
 
-	std::cin.get();
+
 	return 0;
 }
 

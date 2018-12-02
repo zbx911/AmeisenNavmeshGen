@@ -34,6 +34,7 @@ struct MCNK
 	uint32_t n_msce;
 	uint32_t offset_mclq;
 	uint32_t size_mclq;
+	uint32_t trash5;
 	Vector3 position;
 	uint32_t offset_mccv;
 	uint32_t trash3;

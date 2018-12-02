@@ -36,6 +36,7 @@ std::string export_directory = "X:\NavmeshExport";
 Without them this project would not exist.
 
 ❤️ wowdev wiki guys: https://wowdev.wiki/ADT/v18#ADT_files_and_blocks
+
 ❤️ Recast & Detour: https://github.com/recastnavigation/recastnavigation
 
 ## Screenshots

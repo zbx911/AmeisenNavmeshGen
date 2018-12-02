@@ -9,8 +9,7 @@ struct MCVT
 {
 	char desc[4];
 	uint32_t size;
-	char trash;
-	float height[9 * 9 + 8 * 8];
+	float heights[9 * 9 + 8 * 8];
 };
 
 #endif

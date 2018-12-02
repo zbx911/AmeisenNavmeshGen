@@ -9,6 +9,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <math.h>
 
 #include "map.h"
 #include "block.h"

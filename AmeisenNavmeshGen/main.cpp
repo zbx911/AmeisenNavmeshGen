@@ -87,47 +87,49 @@ int main(int argc, char* argv[]) {
 		output_parsing_debug_stuff(adt_mver, adt_mhdr, adt_mcin, adt_mcin_chunks, adt_mcnks, adt_mcvts, adt_mcnrs);
 
 		// to prevent th E
-		//obj_stream << std::fixed << std::showpoint;
-		//obj_stream << std::setprecision(8);
+		obj_stream << std::fixed << std::showpoint;
+		obj_stream << std::setprecision(8);
 
+		std::stringstream vertex_buffer;
 		std::stringstream index_buffer;
 		int chunk_count = 0;
-		int vertext_count = 1;
+		int vertex_count = 1;
 		// OBJ output
-		for (int i = 0; i < 16; i++)
+		for (size_t i = 0; i < 16; i++)
 		{
-			for (int j = 0; j < 16; j++)
+			for (size_t j = 0; j < 16; j++)
 			{
-				for (int y = 0; y < 9 + 8; y++)
+				int vertex_index = 0;
+				for (size_t y = 0; y < 9 + 8; y++)
 				{
 					if ((y + 1) % 2 == 0) // We are in the 8 items row
 					{
-						for (int x = 0; x < 8; x++)
+						for (size_t x = 0; x < 8; x++)
 						{
-							float posX = (x * TILE_STEP8) + (j * CHUNK_SIZE); // + (TILE_STEP / 2)
-							float posY = (y * TILE_STEP8) + (i * CHUNK_SIZE);
-							// using random values for testing
-							float posZ = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); //adt_mcvts[chunk_count].height[count - 1] * adt_mcnrs[chunk_count].normals[count - 1];
+							float posX = (x * TILE_STEP8) + (j * CHUNK_SIZE);
+							float posY = (y / 2 * TILE_STEP8) + (i * CHUNK_SIZE);
+							float posZ = adt_mcvts[chunk_count].heights[vertex_index];
 
-							obj_stream << "v " << -posY << " " << posZ << " " << -posX << "\n";
-							index_buffer << "f " << vertext_count << " " << vertext_count - 9 << " " << vertext_count - 8 << "\n";
-							index_buffer << "f " << vertext_count << " " << vertext_count + 9 << " " << vertext_count + 8 << "\n";
-							index_buffer << "f " << vertext_count << " " << vertext_count + 8 << " " << vertext_count - 9 << "\n";
-							index_buffer << "f " << vertext_count << " " << vertext_count - 8 << " " << vertext_count + 9 << "\n";
-							vertext_count++;
+							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+							index_buffer << "f " << vertex_count << " " << vertex_count - 9 << " " << vertex_count - 8 << "\n";
+							index_buffer << "f " << vertex_count << " " << vertex_count + 9 << " " << vertex_count + 8 << "\n";
+							index_buffer << "f " << vertex_count << " " << vertex_count + 8 << " " << vertex_count - 9 << "\n";
+							index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
+							vertex_count++;
+							vertex_index++;
 						}
 					}
 					else // We are in the 9 items row
 					{
-						for (int x = 0; x < 9; x++)
+						for (size_t x = 0; x < 9; x++)
 						{
 							float posX = (x * TILE_STEP9) + (j * CHUNK_SIZE);
-							float posY = (y * TILE_STEP9) + (i * CHUNK_SIZE);
-							// using random values for testing
-							float posZ = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); //adt_mcvts[chunk_count].height[count - 1] * adt_mcnrs[chunk_count].normals[count - 1];
+							float posY = (y / 2 * TILE_STEP9) + (i * CHUNK_SIZE);
+							float posZ = adt_mcvts[chunk_count].heights[vertex_index];
 
-							obj_stream << "v " << -posY << " " << posZ << " " << -posX << "\n";
-							vertext_count++;
+							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+							vertex_count++;
+							vertex_index++;
 						}
 					}
 				}
@@ -135,6 +137,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
+		obj_stream << vertex_buffer.str();
 		obj_stream << index_buffer.str();
 		obj_stream.close();
 	}
@@ -276,7 +279,7 @@ void output_parsing_debug_stuff(MVER adt_mver, MHDR adt_mhdr, MCIN adt_mcin, std
 		std::cout << "#------------------------------------------------------------------------\n";
 		for (size_t i = 0; i < adt_mcvts.size(); i++)
 		{
-			std::cout << "#---> MCNVT Desc: " << adt_mcvts[i].desc << " Size: " << adt_mcvts[i].size << " First Height: " << adt_mcvts[i].height[0] << "\n";
+			std::cout << "#---> MCNVT Desc: " << adt_mcvts[i].desc << " Size: " << adt_mcvts[i].size << " First Height: " << adt_mcvts[i].heights[0] << "\n";
 		}
 		std::cout << "#------------------------------------------------------------------------\n";
 		for (size_t i = 0; i < adt_mcnrs.size(); i++)

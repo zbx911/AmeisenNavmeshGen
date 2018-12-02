@@ -15,6 +15,7 @@ This is my attempt to create a navigation system using recast & detour for my Wo
 
 ## How to use this
 **1.** Export ADT files using an MPQ editor or similar
+
 **2.** Pass filepaths into this array *sample_adts*
 ```c++
 std::string sample_adts[] = {
@@ -24,10 +25,12 @@ std::string sample_adts[] = {
     "F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_48.adt"
 };
 ```
+
 **3.** Change the *export_directory* to a place where the \*.obj files will be dumped
 ```c++
 std::string export_directory = "X:\NavmeshExport";
 ```
+
 **4.** Open the \*.obj with RecastDemo or do something else with them
 
 

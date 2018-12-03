@@ -4,148 +4,168 @@
 // set this to false to avoid console spam
 constexpr bool DEBUG = false;
 
+// Set this values to the blocks that you want to export
+// MIN 1
+// MAX 64
+constexpr int MAP_X_START = 32;
+constexpr int MAP_X_END = 32;
+constexpr int MAP_Y_START = 48;
+constexpr int MAP_Y_END = 48;
+
 int main(int argc, char* argv[]) {
 
-	// will be replaced with MPQ reader
-	std::string sample_adts[] = {
-		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_31_48.adt",
-		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_31_47.adt",
-		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_47.adt",
-		"F:\\WoW Mapping stuff\\World\\maps\\Azeroth\\Azeroth_32_48.adt"
-	};
+	std::string input_directory = "F:\\WoW Mapping stuff";
+	std::string export_directory = "C:\\Users\\Jannis\\Desktop\\recastnavigation\\RecastDemo\\Bin\\Meshes\\";
 
-	std::string export_directory = "X:\NavmeshExport";
+	// will be replaced with MPQ reader
+	std::string maps_to_read[] = {
+		"Azeroth"
+	};
 
 	// Create export directory
 	CreateDirectory(export_directory.c_str(), NULL);
-	int adt_count = sizeof(sample_adts) / sizeof(sample_adts[0]);
+	int map_count = sizeof(maps_to_read) / sizeof(maps_to_read[0]);
 
 	std::cout << "#> Ameisen Navmesh Generator (v" << VERSION << ")\n";
-	std::cout << "#> ADT count: " << adt_count << "\n";
+	std::cout << "#> ADT count: " << map_count << "\n";
 
-	for (size_t i = 0; i < adt_count; i++)
+	for (size_t m = 0; m < map_count; m++)
 	{
-		std::string filename = sample_adts[i].substr(sample_adts[i].find_last_of("/\\") + 1); // remove folder path
-		filename = filename.substr(0, filename.find_last_of('.')); // remove file extension
-
-		// output OBJ file stream, will use *.obj to test in the recast demo
 		std::fstream obj_stream;
-		obj_stream.open(export_directory + "\\" + filename + ".obj", std::fstream::out);
+		std::stringstream vertex_buffer;
+		std::stringstream index_buffer;
 
-		// Split "Azeroth_32_48" into "Azeroth", 32, 48 to parse these values later
-		int count = 0;
-		size_t pos = 0;
-		std::string token;
-		std::string filename_values[3];
-
-		while ((pos = filename.find("_")) != std::string::npos) {
-			token = filename.substr(0, pos);
-			filename_values[count] = token;
-			filename.erase(0, pos + 1);
-			count++;
-		}
-		filename_values[count] = filename;
-
-		std::cout << "#-> [" << i
-			<< "] Processing: " << filename_values[0].c_str()
-			<< " X: " << filename_values[1].c_str()
-			<< " Y: " << filename_values[2].c_str() << "\n";
-
-		// Reading part
-		std::ifstream adt_stream;
-		adt_stream.open(sample_adts[i].c_str(), std::fstream::in | std::fstream::binary);
-
-		MVER adt_mver;
-		read_MVER(adt_mver, adt_stream);
-
-		MHDR adt_mhdr;
-		read_MHDR(adt_mhdr, adt_stream);
-
-		////// ----------------------------------------------------
-		//// Check if the we are at the right position to read MCIN
-		// For some reason we need to add 0x14 (20) to the position
-		const uint32_t MCIN_POSITION = reinterpret_cast<uint32_t>(adt_mhdr.mcin) + STATIC_POINTER_OFFSET;
-
-		if (adt_stream.tellg() != MCIN_POSITION) {
-			adt_stream.seekg(MCIN_POSITION);
-		}
-
-		MCIN adt_mcin;
-		read_MCIN_header(adt_mcin, adt_stream);
-
-		std::vector<MCIN_chunk> adt_mcin_chunks(16 * 16);
-		read_MCIN_chunks(adt_mcin_chunks, adt_stream);
-
-		std::vector<MCNK> adt_mcnks(16 * 16);
-		read_MCNK(adt_mcnks, adt_mcin_chunks, adt_stream);
-
-		std::vector<MCVT> adt_mcvts(16 * 16);
-		read_MCVT(adt_mcvts, adt_mcnks, adt_mcin_chunks, adt_stream);
-
-		std::vector<MCNR> adt_mcnrs(16 * 16);
-		read_MCNR(adt_mcnrs, adt_mcnks, adt_mcin_chunks, adt_stream);
-
-		adt_stream.close();
-		output_parsing_debug_stuff(adt_mver, adt_mhdr, adt_mcin, adt_mcin_chunks, adt_mcnks, adt_mcvts, adt_mcnrs);
-
+		int vertex_count = 1;
+		
 		// to prevent th E
 		obj_stream << std::fixed << std::showpoint;
 		obj_stream << std::setprecision(8);
 
-		std::stringstream vertex_buffer;
-		std::stringstream index_buffer;
-		int chunk_count = 0;
-		int vertex_count = 1;
+		// output OBJ file stream, will use *.obj to test in the recast demo
+		obj_stream.open(export_directory + "\\" + maps_to_read[m] + ".obj", std::fstream::out);
 
-		int block_x = atoi(filename_values[1].c_str());
-		int block_y = atoi(filename_values[2].c_str());
-
-		const float BLOCK_BASE_X = block_x * BLOCK_SIZE;
-		const float BLOCK_BASE_Y = block_y * BLOCK_SIZE;
-		// OBJ output
-		for (size_t i = 0; i < 16; i++)
+		for (size_t map_x = MAP_X_START; map_x <= MAP_X_END; map_x++)
 		{
-			for (size_t j = 0; j < 16; j++)
+			for (size_t map_y = MAP_Y_START; map_y <= MAP_Y_END; map_y++)
 			{
-				int vertex_index = 0;
-				for (size_t y = 0; y < 9 + 8; y++)
+				std::stringstream filepath;
+				filepath << input_directory << "\\World\\maps\\" << maps_to_read[m] << "\\" << maps_to_read[m] << "_" << map_x << "_" << map_y << ".adt";
+				
+				// check for file existence, not all 64x64 blocks have to be filled
+				if (0xFFFFFFFF == GetFileAttributes(filepath.str().c_str())) {
+					continue;
+				}
+
+				int count = 0;
+				size_t pos = 0;
+
+				std::string token;
+				std::string filename_values[3];
+
+				std::string filename = filepath.str().substr(filepath.str().find_last_of("/\\") + 1); // remove folder path
+				filename = filename.substr(0, filename.find_last_of('.')); // remove file extension
+
+				// Split "Azeroth_32_48" into "Azeroth", 32, 48 to parse these values later
+				while ((pos = filename.find("_")) != std::string::npos) {
+					token = filename.substr(0, pos);
+					filename_values[count] = token;
+					filename.erase(0, pos + 1);
+					count++;
+				}
+				filename_values[count] = filename;
+
+				std::cout << "#-> [" << m
+					<< "] Processing: " << filename_values[0].c_str()
+					<< " X: " << filename_values[1].c_str()
+					<< " Y: " << filename_values[2].c_str() << "\n";
+
+				// Reading part
+				std::ifstream adt_stream;
+				adt_stream.open(filepath.str(), std::fstream::in | std::fstream::binary);
+
+				MVER adt_mver;
+				read_MVER(adt_mver, adt_stream);
+
+				MHDR adt_mhdr;
+				read_MHDR(adt_mhdr, adt_stream);
+
+				////// ----------------------------------------------------
+				//// Check if the we are at the right position to read MCIN
+				// For some reason we need to add 0x14 (20) to the position
+				const uint32_t MCIN_POSITION = reinterpret_cast<uint32_t>(adt_mhdr.mcin) + STATIC_POINTER_OFFSET;
+
+				if (adt_stream.tellg() != MCIN_POSITION) {
+					adt_stream.seekg(MCIN_POSITION);
+				}
+
+				MCIN adt_mcin;
+				read_MCIN_header(adt_mcin, adt_stream);
+
+				std::vector<MCIN_chunk> adt_mcin_chunks(16 * 16);
+				read_MCIN_chunks(adt_mcin_chunks, adt_stream);
+
+				std::vector<MCNK> adt_mcnks(16 * 16);
+				read_MCNK(adt_mcnks, adt_mcin_chunks, adt_stream);
+
+				std::vector<MCVT> adt_mcvts(16 * 16);
+				read_MCVT(adt_mcvts, adt_mcnks, adt_mcin_chunks, adt_stream);
+
+				std::vector<MCNR> adt_mcnrs(16 * 16);
+				read_MCNR(adt_mcnrs, adt_mcnks, adt_mcin_chunks, adt_stream);
+
+				adt_stream.close();
+				output_parsing_debug_stuff(adt_mver, adt_mhdr, adt_mcin, adt_mcin_chunks, adt_mcnks, adt_mcvts, adt_mcnrs);
+				
+				int chunk_count = 0;
+
+				const float BLOCK_BASE_X = map_x * (BLOCK_SIZE - 60.F);
+				const float BLOCK_BASE_Y = map_y * (BLOCK_SIZE - 60.F);
+				// OBJ output
+				for (size_t i = 0; i < 16; i++)
 				{
-					if ((y + 1) % 2 == 0) // We are in the 8 items row
+					for (size_t j = 0; j < 16; j++)
 					{
-						for (size_t x = 0; x < 8; x++)
+						int vertex_index = 0;
+						for (size_t y = 0; y < 9 + 8; y++)
 						{
-							float posX = (BLOCK_BASE_X / 2) + (x * TILE_STEP8) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
-							float posY = (BLOCK_BASE_Y / 2) + (y / 2 * TILE_STEP8) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
-							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
+							if ((y + 1) % 2 == 0) // We are in the 8 items row
+							{
+								for (size_t x = 0; x < 8; x++)
+								{
+									float posX = (BLOCK_BASE_X) + (x * TILE_STEP8) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+									float posY = (BLOCK_BASE_Y) + (y / 2 * TILE_STEP8) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+									float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
 
-							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+									vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
 
-							index_buffer << "f " << vertex_count << " " << vertex_count - 9 << " " << vertex_count - 8 << "\n";
-							index_buffer << "f " << vertex_count << " " << vertex_count + 9 << " " << vertex_count + 8 << "\n";
-							index_buffer << "f " << vertex_count << " " << vertex_count + 8 << " " << vertex_count - 9 << "\n";
-							index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
-							index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
+									index_buffer << "f " << vertex_count << " " << vertex_count - 9 << " " << vertex_count - 8 << "\n";
+									index_buffer << "f " << vertex_count << " " << vertex_count + 9 << " " << vertex_count + 8 << "\n";
+									index_buffer << "f " << vertex_count << " " << vertex_count + 8 << " " << vertex_count - 9 << "\n";
+									index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
+									index_buffer << "f " << vertex_count << " " << vertex_count - 8 << " " << vertex_count + 9 << "\n";
 
-							vertex_count++;
-							vertex_index++;
+									vertex_count++;
+									vertex_index++;
+								}
+							}
+							else // We are in the 9 items row
+							{
+								for (size_t x = 0; x < 9; x++)
+								{
+									float posX = (BLOCK_BASE_X) + (x * TILE_STEP9) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
+									float posY = (BLOCK_BASE_Y) + (y / 2 * TILE_STEP9) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
+									float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
+
+									vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
+
+									vertex_count++;
+									vertex_index++;
+								}
+							}
 						}
-					}
-					else // We are in the 9 items row
-					{
-						for (size_t x = 0; x < 9; x++)
-						{
-							float posX = (BLOCK_BASE_X / 2) + (x * TILE_STEP9) + (j*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.x;
-							float posY = (BLOCK_BASE_Y / 2) + (y / 2 * TILE_STEP9) + (i*(CHUNK_SIZE - 3.7F)); // adt_mcnks[chunk_count].position.y;
-							float posZ = adt_mcnks[chunk_count].position.z + adt_mcvts[chunk_count].heights[vertex_index];
-
-							vertex_buffer << "v " << -posY << " " << posZ << " " << -posX << "\n";
-
-							vertex_count++;
-							vertex_index++;
-						}
+						chunk_count++;
 					}
 				}
-				chunk_count++;
 			}
 		}
 
@@ -153,7 +173,6 @@ int main(int argc, char* argv[]) {
 		obj_stream << index_buffer.str();
 		obj_stream.close();
 	}
-
 
 	return 0;
 }

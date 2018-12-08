@@ -7,7 +7,8 @@
 
 struct MWID
 {
-	uint32_t offsets[0];
+	char desc[4];
+	uint32_t size;
 };
 
 #endif

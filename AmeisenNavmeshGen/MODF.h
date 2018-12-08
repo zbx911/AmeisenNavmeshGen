@@ -11,9 +11,14 @@ enum MODFFlags {
 	modf_destroyable = 1,
 };
 
+struct MODF_Header {
+	char desc[4];
+	uint32_t size;
+};
+
 struct MODF {
-	uint32_t nameId;
-	uint32_t uniqueId;
+	uint32_t name_id;
+	uint32_t unique_id;
 	Vector3 position;
 	Vector3 rotation;
 	AxisAlignedBox extents;

@@ -3,9 +3,12 @@
 #ifndef _H_MWMO
 #define _H_MWMO
 
+#include <stdint.h>
+
 struct MWMO
 {
-	char filenames[0];
+	char desc[4];
+	uint32_t size;
 };
 
 #endif

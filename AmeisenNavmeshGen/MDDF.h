@@ -12,6 +12,11 @@ enum MDDFFlags {
 	mddf_shrubbery = 2
 };
 
+struct MDDF_Header {
+	char desc[4];
+	uint32_t size;
+};
+
 struct MDDF {
 	uint32_t name_id;
 	uint32_t unique_id;
